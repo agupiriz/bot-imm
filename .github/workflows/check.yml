@@ -23,8 +23,3 @@ jobs:
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
           MONTHS_TO_CHECK: 4
         run: node run.js
-
-      - uses: actions/cache@v4
-        with:
-          path: state.json
-          key: state-cache-v1
