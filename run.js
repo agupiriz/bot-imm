@@ -24,21 +24,13 @@ async function sendTelegram(message) {
   if (!res.ok) throw new Error(`Telegram error: ${res.status}`);
 }
 
-function loadState() {
-  try { return JSON.parse(fs.readFileSync(STATE_FILE, "utf8")); }
-  catch { return { lastSignature: null }; }
-}
-function saveState(s) {
-  fs.writeFileSync(STATE_FILE, JSON.stringify(s, null, 2));
-}
-function signatureFromResult(r) {
-  return JSON.stringify(r.results.map(x => ({ m: x.monthLabel, d: x.diasConCupo })));
+function formatFoundMessage(r) {
+  const lines = r.results.map(x =>
+    x.diasConCupo.length ? `✅ ${x.monthLabel}: ${x.diasConCupo.join(", ")}` : `❌ ${x.monthLabel}: sin cupos`
+  );
+  return `✅ HAY CUPOS DISPONIBLES\n\n${lines.join("\n")}\n\n🔗 ${r.url}`;
 }
 
-function formatFoundMessage(r) {
-  const fw = r.firstWithCupo;
-  return `✅ HAY CUPOS DISPONIBLES\n\n📅 Mes: ${fw.monthLabel}\n🟢 Días: ${fw.diasConCupo.join(", ")}\n\n🔗 ${r.url}`;
-}
 function formatStatusMessage(r) {
   const lines = r.results.map(x =>
     x.diasConCupo.length ? `✅ ${x.monthLabel}: ${x.diasConCupo.join(", ")}` : `❌ ${x.monthLabel}: sin cupos`
@@ -50,15 +42,11 @@ function formatStatusMessage(r) {
   if (!TG_TOKEN || !TG_CHAT_ID) throw new Error("Faltan TG_TOKEN/TG_CHAT_ID");
 
   const r = await checkCupos({ monthsToCheck: MONTHS_TO_CHECK, headless: HEADLESS });
-  const state = loadState();
-  const sig = signatureFromResult(r);
 
   if (MODE === "check") {
     // solo avisa si hay cupo y cambió (anti-spam)
-    if (r.hasCupo && sig !== state.lastSignature) {
+    if (r.hasCupo) {
       await sendTelegram(formatFoundMessage(r));
-      state.lastSignature = sig;
-      saveState(state);
     }
   } else {
     // status cada 30 min
