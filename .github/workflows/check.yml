@@ -16,17 +16,12 @@ jobs:
       - run: npm ci
       - run: npx playwright install chromium
 
-      - uses: actions/cache@v4
-        with:
-          path: state.json
-          key: state-cache-v1
-
       - name: Run
         env:
           MODE: check
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
-          MONTHS_TO_CHECK: ${{ secrets.MONTHS_TO_CHECK }}
+          MONTHS_TO_CHECK: 4
         run: node run.js
 
       - uses: actions/cache@v4

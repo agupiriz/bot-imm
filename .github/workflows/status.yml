@@ -21,5 +21,5 @@ jobs:
           MODE: status
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
-          MONTHS_TO_CHECK: ${{ secrets.MONTHS_TO_CHECK }}
+          MONTHS_TO_CHECK: 4
         run: node run.js

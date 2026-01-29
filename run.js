@@ -6,7 +6,7 @@ const MODE = process.env.MODE || "check"; // "check" o "status"
 const TG_TOKEN = process.env.TG_TOKEN;
 const TG_CHAT_ID = process.env.TG_CHAT_ID;
 
-const MONTHS_TO_CHECK = Number(process.env.MONTHS_TO_CHECK || 4);
+const MONTHS_TO_CHECK = 4
 const HEADLESS = true;
 
 const STATE_FILE = "state.json";
