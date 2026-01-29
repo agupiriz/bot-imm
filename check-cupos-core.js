@@ -38,7 +38,7 @@ export async function checkCupos({ monthsToCheck = 4, headless = true } = {}) {
     for (let i = 0; i < monthsToCheck; i++) {
       const monthLabel = await getMonthLabel(page);
 
-      const diasConCupo = await page.$$eval("td.diaConCupo", (tds) =>
+      const diasConCupo = await page.$$eval("td.diaSinCupo", (tds) =>
         tds
           .map((td) => (td.textContent || "").trim())
           .filter((t) => /^\d{1,2}$/.test(t))
